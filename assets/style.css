@@ -1,0 +1,21 @@
+/*Semantic styles*/
+nav {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*main styles*/
+.container {
+    width: 100%;
+}
+
+/*additional styles*/
+#answer-list li {
+    background-color: #78A1BB;
+    width: 50%;
+}
+
+#answer-list li:hover {
+    background-color: #A491D3;
+}
