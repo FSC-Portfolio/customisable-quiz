@@ -19,3 +19,7 @@ nav {
 #answer-list li:hover {
     background-color: #A491D3;
 }
+
+.btn {
+    margin: 5px;
+}
