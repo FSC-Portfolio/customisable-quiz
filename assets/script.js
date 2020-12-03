@@ -26,24 +26,29 @@ function loadData() {
     } else {
         // Load the questions.
         var loadedQuestions = JSON.parse(localStorage.getItem("qanda"));
-        loadedQuestions.forEach(function (item) {
-            console.log(item);
-        })
-
+        // loadedQuestions.forEach(function (item) {
+        //     console.log(item);
+        // })
     }
 }
 
-var counter = 60;
-var interval = setInterval(function() {
-    counter--;
-    if (counter <= 0) {
-        clearInterval(interval);
-        $('#seconds').html("Count down complete");
-        return;
-    }else{
-        $('#seconds').text(counter);
-    }
-}, 1000);
+function theCounter(countdownSeconds) {
+    var counter = countdownSeconds;
+    var interval = setInterval(function () {
+        counter--;
+        if (counter <= 0) {
+            clearInterval(interval);
+            $('#seconds').html("Count down complete");
+            return;
+        } else {
+            $('#seconds').text(counter);
+        }
+    }, 1000);
+}
 
+$('#btn-start').click(function () {
+    console.log("heya");
+    theCounter(60);
+});
 
 loadData();
