@@ -2,6 +2,7 @@
 var loadedQuestions;
 var currentQuestion = 0;
 var counter = 0;
+var timer;
 
 function shuffleArray(arrayToShuffle) {
     // Shuffles whatever array is parsed to it.
@@ -26,36 +27,51 @@ function loadData() {
     }
 }
 
-function theCounter(countdownSeconds) {
-    // This is the countdown timer.
-    // TODO needs to return a flag when started to stop user restarting!
-    counter = countdownSeconds;
-    var interval = setInterval(function () {
-        counter--;
-        if (counter <= 0) {
-            clearInterval(interval);
-            $('#seconds').html("Count down complete");
-            return;
-        } else {
-            $('#seconds').text(counter);
-        }
+
+// Borrowed a good portion of the timer from
+// https://codepen.io/joshLongmire3/pen/prJrZV
+function countDown(seconds, callback) {
+    //callback = callback || function(){};
+    timer = setInterval(function() {
+        document.getElementById("seconds").innerHTML = "Number: " + seconds;
+        seconds-- || (clearInterval(timer), callback());
+        counter = seconds +1;
     }, 1000);
 }
 
-// var gameCounter = loadedQuestions.length;
+
+function theCounter(totalSeconds) {
+    countDown(totalSeconds, function () {
+        $('seconds').html("Countdown done!");
+    });
+}
+
+function theCounterStop(){
+    clearInterval(timer);
+}
+
 
 function playGame() {
-
     $('#main-text').html(loadedQuestions[currentQuestion].title);
     var answerList = $('#answer-list');
     answerList.html("");
     var actualAnswer = loadedQuestions[currentQuestion].answer;
     $(loadedQuestions[currentQuestion].choices).each(function (index, item) {
+        // set the variables
+        var newButton = $('<button>');
         var choiceDivRow = $('<div>');
         choiceDivRow.attr("class", "row");
         var choiceDivCol = $('<div>');
         choiceDivCol.attr("class", "col-md-12");
-        choiceDivCol.html('<button type="button" id="' + item + '" class="btn btn-primary btn-lg">' + item + '</button>');
+
+        newButton.attr("type", "button");
+        newButton.attr("name", item);
+        newButton.attr("class", "gameButton btn btn-primary btn-lg");
+        newButton.html(item);
+
+        choiceDivCol.append(newButton);
+
+        // choiceDivCol.html('<button type="button" id="' + item + '" class="btn btn-primary btn-lg">' + item + '</button>');
         choiceDivRow.append(choiceDivCol);
         $('#answer-list').append(choiceDivRow);
     });
@@ -64,7 +80,9 @@ function playGame() {
     $('#answer-list').click(function(event){
         event.preventDefault();
         // make sure we're clicking on a button
-        if (event.target.matches(".btn")) {
+        if (event.target.matches(".gameButton")) {
+        // if (event.target.attr("data") === "gameButton") {
+            console.log("we hereee");
             // check the result
             if (event.target.id === actualAnswer) {
                 if (currentQuestion + 1 < loadedQuestions.length ) {
@@ -72,12 +90,13 @@ function playGame() {
                     currentQuestion += 1;
                     playGame();
                 } else {
-                    console.log("we're ending the game");
-                    window.location.href = "highscore.html";
+                    console.log("we're ending the game with a score of ", counter);
+                    theCounterStop();
+                    // window.location.href = "highscore.html";
                 }
             } else {
-                // theCounter(counter - 10);
-                console.log("nokies");
+                console.log("counter is at ", counter);
+                theCounter(counter - 10);
             }
         }
     })
