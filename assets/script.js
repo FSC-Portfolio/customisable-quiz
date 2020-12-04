@@ -97,6 +97,7 @@ function playGame() {
             } else {
                 console.log("counter is at ", counter);
                 theCounter(counter - 10);
+                console.log("counter is now at ", counter);
             }
         }
     })
