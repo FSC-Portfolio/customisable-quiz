@@ -64,6 +64,7 @@ function playGame() {
         var choiceDivCol = $('<div>');
         choiceDivCol.attr("class", "col-md-12");
 
+        newButton.attr("id", item);
         newButton.attr("type", "button");
         newButton.attr("name", item);
         newButton.attr("class", "gameButton btn btn-primary btn-lg");
@@ -81,10 +82,9 @@ function playGame() {
         event.preventDefault();
         // make sure we're clicking on a button
         if (event.target.matches(".gameButton")) {
-        // if (event.target.attr("data") === "gameButton") {
-            console.log("we hereee");
             // check the result
             if (event.target.id === actualAnswer) {
+            // if (event.target.id === actualAnswer) {
                 if (currentQuestion + 1 < loadedQuestions.length ) {
                     console.log("current q: ", currentQuestion);
                     currentQuestion += 1;
