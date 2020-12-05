@@ -22,8 +22,9 @@ function shuffleArray(arrayToShuffle) {
 function loadData() {
     if(!localStorage.getItem(KEY_QANDA)) {
         console.log("empty storage");
-        // it's the first time playing so set the default
+        // it's the first time playing so set the default - and load the questions!
         localStorage.setItem(KEY_QANDA, JSON.stringify(shuffleArray(questions)));
+        loadedQuestions = JSON.parse(localStorage.getItem(KEY_QANDA));
     } else {
         // Load the questions.
         loadedQuestions = JSON.parse(localStorage.getItem(KEY_QANDA));
@@ -78,6 +79,7 @@ function createGameButton(answerItem) {
     return choiceDivRow;
 }
 
+
 function playGame() {
     $('#main-text').html(loadedQuestions[currentQuestion].title);
     var answerList = $('#answer-list');
@@ -87,7 +89,6 @@ function playGame() {
         // Create a button for each answer.
         answerList.append(createGameButton(item));
     });
-
 
     answerList.click(function(event){
         event.preventDefault();
@@ -127,9 +128,9 @@ function playGame() {
 }
 
 
+loadData();
 $('#btn-start').click(function () {
     theCounter(DEFAULT_TIME);
     playGame();
 });
 
-loadData();
