@@ -2,10 +2,25 @@
 var DEFAULT_TIME = 60;
 var PENALTY_TIME = 10
 var KEY_QANDA = "qanda"
+var KEY_HIGHSCORE = "highscore";
 var loadedQuestions;
 var currentQuestion = 0;
 var counter = 0;
 var timer;
+var highscore = [];
+
+
+function loadHighScores() {
+    // Load high scores if they exist.
+    if (localStorage.getItem(KEY_HIGHSCORE)) {
+        highscore = localStorage.getItem(KEY_HIGHSCORE);
+    }
+}
+
+
+function storeHighScore() {
+    localStorage.setItem(KEY_HIGHSCORE, highscore);
+}
 
 function shuffleArray(arrayToShuffle) {
     // Shuffles whatever array is parsed to it.
@@ -19,9 +34,9 @@ function shuffleArray(arrayToShuffle) {
     return arrayToShuffle;
 }
 
+
 function loadData() {
     if(!localStorage.getItem(KEY_QANDA)) {
-        console.log("empty storage");
         // it's the first time playing so set the default - and load the questions!
         localStorage.setItem(KEY_QANDA, JSON.stringify(shuffleArray(questions)));
         loadedQuestions = JSON.parse(localStorage.getItem(KEY_QANDA));
@@ -35,7 +50,6 @@ function loadData() {
 // Borrowed a good portion of the timer from
 // https://codepen.io/joshLongmire3/pen/prJrZV
 function countDown(seconds, callback) {
-    //callback = callback || function(){};
     timer = setInterval(function() {
         document.getElementById("seconds").innerHTML = "Number: " + seconds;
         seconds-- || (clearInterval(timer), callback());
@@ -45,12 +59,15 @@ function countDown(seconds, callback) {
 
 
 function theCounter(totalSeconds) {
+    // This will start the timer and run it to completion.
     countDown(totalSeconds, function () {
         $('seconds').html("Countdown done!");
     });
 }
 
+
 function theCounterStop(){
+    // Interrupts the timer on demand.
     clearInterval(timer);
 }
 
