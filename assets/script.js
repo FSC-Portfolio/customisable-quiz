@@ -51,34 +51,42 @@ function theCounterStop(){
 }
 
 
+function createGameButton(answerItem) {
+    // Creates a new button for use in the game.
+    // Set the variables.
+    var newButton = $('<button>');
+    var choiceDivRow = $('<div>');
+    var choiceDivCol = $('<div>');
+
+    // Create the divs.
+    choiceDivRow.attr("class", "row");
+    choiceDivCol.attr("class", "col-md-12");
+
+    // Add the button attributes.
+    newButton.attr("id", answerItem);
+    newButton.attr("type", "button");
+    newButton.attr("name", answerItem);
+    newButton.attr("class", "gameButton btn btn-primary btn-lg");
+
+    // Add the contents to the button and return the row div object.
+    newButton.html(answerItem);
+    choiceDivCol.append(newButton);
+    choiceDivRow.append(choiceDivCol);
+    return choiceDivRow;
+}
+
 function playGame() {
     $('#main-text').html(loadedQuestions[currentQuestion].title);
     var answerList = $('#answer-list');
     answerList.html("");
     var actualAnswer = loadedQuestions[currentQuestion].answer;
     $(loadedQuestions[currentQuestion].choices).each(function (index, item) {
-        // set the variables
-        var newButton = $('<button>');
-        var choiceDivRow = $('<div>');
-        choiceDivRow.attr("class", "row");
-        var choiceDivCol = $('<div>');
-        choiceDivCol.attr("class", "col-md-12");
-
-        newButton.attr("id", item);
-        newButton.attr("type", "button");
-        newButton.attr("name", item);
-        newButton.attr("class", "gameButton btn btn-primary btn-lg");
-        newButton.html(item);
-
-        choiceDivCol.append(newButton);
-
-        // choiceDivCol.html('<button type="button" id="' + item + '" class="btn btn-primary btn-lg">' + item + '</button>');
-        choiceDivRow.append(choiceDivCol);
-        $('#answer-list').append(choiceDivRow);
+        // Create a button for each answer.
+        answerList.append(createGameButton(item));
     });
 
 
-    $('#answer-list').click(function(event){
+    answerList.click(function(event){
         event.preventDefault();
         // make sure we're clicking on a button
         if (event.target.matches(".gameButton")) {
