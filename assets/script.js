@@ -13,13 +13,18 @@ var highscore = [];
 function loadHighScores() {
     // Load high scores if they exist.
     if (localStorage.getItem(KEY_HIGHSCORE)) {
-        highscore = localStorage.getItem(KEY_HIGHSCORE);
+        highscore = JSON.parse(localStorage.getItem(KEY_HIGHSCORE));
+        console.log(highscore);
     }
 }
 
 
-function storeHighScore() {
-    localStorage.setItem(KEY_HIGHSCORE, highscore);
+function storeHighScore(userInitials, score) {
+    highscore.push({
+        "player": userInitials,
+        "score": score
+    })
+    localStorage.setItem(KEY_HIGHSCORE, JSON.stringify(highscore));
 }
 
 function shuffleArray(arrayToShuffle) {
@@ -126,16 +131,15 @@ function playGame() {
                     var initials = prompt("Congratulations you achieved a score worth keeping!\n" +
                         "Enter your initials\n" +
                         "Score: " + counter);
+                    storeHighScore(initials, counter);
                     // Stop the counter and redirect the user to the high score page (get their initials here first).
                     theCounterStop();
                     // window.location.href = "highscore.html";
                 }
             } else {
                 // Incorrect answer. Stop the current timer and start a new one minus 10 seconds.
-                // This is being generous to the player as they are getting an extra second with each error
                 // TODO find a better way to achieve this.
                 theCounterStop();
-                console.log("whyyyyy?");
                 if ( counter - PENALTY_TIME > 0) {
                     theCounter(counter - PENALTY_TIME);
                 } else {
@@ -155,6 +159,7 @@ function playGame() {
 loadData();
 $('#btn-start').click(function () {
     theCounter(DEFAULT_TIME);
+    loadHighScores();
     playGame();
 });
 
