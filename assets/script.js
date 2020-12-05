@@ -81,7 +81,7 @@ function createGameButton(answerItem) {
 
     // Create the divs.
     choiceDivRow.attr("class", "row");
-    choiceDivCol.attr("class", "col-md-12");
+    // choiceDivCol.attr("class", "col-md-12");
 
     // Add the button attributes.
     newButton.attr("id", answerItem);
@@ -91,8 +91,9 @@ function createGameButton(answerItem) {
 
     // Add the contents to the button and return the row div object.
     newButton.html(answerItem);
-    choiceDivCol.append(newButton);
-    choiceDivRow.append(choiceDivCol);
+    // choiceDivCol.append(newButton);
+    choiceDivRow.append(newButton);
+    // choiceDivRow.append(choiceDivCol);
     return choiceDivRow;
 }
 
@@ -107,19 +108,24 @@ function playGame() {
         answerList.append(createGameButton(item));
     });
 
-    answerList.click(function(event){
+    var answerButton = $('.gameButton');
+
+    answerButton.click(function(event){
         event.preventDefault();
         // make sure we're clicking on a button
         if (event.target.matches(".gameButton")) {
             // check the result
             if (event.target.id === actualAnswer) {
                 // Correct answer, but more questions to follow.
+                console.log("correct answer");
                 if (currentQuestion + 1 < loadedQuestions.length ) {
                     currentQuestion += 1;
                     playGame();
                 } else {
                     // Correct answer, but that was the last question.
-                    console.log("we're ending the game with a score of ", counter);
+                    var initials = prompt("Congratulations you achieved a score worth keeping!\n" +
+                        "Enter your initials\n" +
+                        "Score: " + counter);
                     // Stop the counter and redirect the user to the high score page (get their initials here first).
                     theCounterStop();
                     // window.location.href = "highscore.html";
@@ -129,6 +135,7 @@ function playGame() {
                 // This is being generous to the player as they are getting an extra second with each error
                 // TODO find a better way to achieve this.
                 theCounterStop();
+                console.log("whyyyyy?");
                 if ( counter - PENALTY_TIME > 0) {
                     theCounter(counter - PENALTY_TIME);
                 } else {
