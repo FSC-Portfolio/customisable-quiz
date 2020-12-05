@@ -1,4 +1,7 @@
 "use strict";
+var DEFAULT_TIME = 60;
+var PENALTY_TIME = 10
+var KEY_QANDA = "qanda"
 var loadedQuestions;
 var currentQuestion = 0;
 var counter = 0;
@@ -17,13 +20,13 @@ function shuffleArray(arrayToShuffle) {
 }
 
 function loadData() {
-    if(!localStorage.getItem("qanda")) {
+    if(!localStorage.getItem(KEY_QANDA)) {
         console.log("empty storage");
         // it's the first time playing so set the default
-        localStorage.setItem("qanda", JSON.stringify(shuffleArray(questions)));
+        localStorage.setItem(KEY_QANDA, JSON.stringify(shuffleArray(questions)));
     } else {
         // Load the questions.
-        loadedQuestions = JSON.parse(localStorage.getItem("qanda"));
+        loadedQuestions = JSON.parse(localStorage.getItem(KEY_QANDA));
     }
 }
 
@@ -92,32 +95,40 @@ function playGame() {
         if (event.target.matches(".gameButton")) {
             // check the result
             if (event.target.id === actualAnswer) {
-            // if (event.target.id === actualAnswer) {
+                // Correct answer, but more questions to follow.
                 if (currentQuestion + 1 < loadedQuestions.length ) {
-                    console.log("current q: ", currentQuestion);
                     currentQuestion += 1;
                     playGame();
                 } else {
+                    // Correct answer, but that was the last question.
                     console.log("we're ending the game with a score of ", counter);
+                    // Stop the counter and redirect the user to the high score page (get their initials here first).
                     theCounterStop();
                     // window.location.href = "highscore.html";
                 }
             } else {
-                console.log("counter is at ", counter);
-                theCounter(counter - 10);
-                console.log("counter is now at ", counter);
+                // Incorrect answer. Stop the current timer and start a new one minus 10 seconds.
+                // This is being generous to the player as they are getting an extra second with each error
+                // TODO find a better way to achieve this.
+                theCounterStop();
+                if ( counter - PENALTY_TIME > 0) {
+                    theCounter(counter - PENALTY_TIME);
+                } else {
+                    // we have an end game condition.
+                    counter = 0;
+                    $('seconds').html("Countdown done!");
+                    console.log("game over bebbeee!")
+                    // TODO view high scores
+                    // TODO Start again.
+                }
             }
         }
     })
 }
 
-    // when completed
-    // stop the clock
-    // ask for initials to go on high score page
-
 
 $('#btn-start').click(function () {
-    theCounter(60);
+    theCounter(DEFAULT_TIME);
     playGame();
 });
 
