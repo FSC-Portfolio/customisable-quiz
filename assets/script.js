@@ -17,7 +17,9 @@ function loadHighScores() {
     // Load high scores if they exist.
     if (localStorage.getItem(KEY_HIGHSCORE)) {
         highscore = JSON.parse(localStorage.getItem(KEY_HIGHSCORE));
-        console.log(highscore);
+        return highscore;
+    } else {
+        return false;
     }
 }
 
@@ -80,31 +82,44 @@ function theCounterStop(){
 }
 
 
-function createGameButton(answerItem) {
+function createButton(nameId, buttonType) {
     // Creates a new button for use in the game.
     // Set the variables.
     var newButton = $('<button>');
     var choiceDivRow = $('<div>');
-    var choiceDivCol = $('<div>');
 
     // Create the divs.
     choiceDivRow.attr("class", "row");
-    // choiceDivCol.attr("class", "col-md-12");
 
     // Add the button attributes.
-    newButton.attr("id", answerItem);
+    newButton.attr("id", nameId);
     newButton.attr("type", "button");
-    newButton.attr("name", answerItem);
-    newButton.attr("class", "gameButton btn btn-primary btn-lg");
+    newButton.attr("name", nameId);
+    newButton.attr("class", buttonType + " btn btn-primary btn-lg");
 
     // Add the contents to the button and return the row div object.
-    newButton.html(answerItem);
-    // choiceDivCol.append(newButton);
+    newButton.html(nameId);
     choiceDivRow.append(newButton);
-    // choiceDivRow.append(choiceDivCol);
     return choiceDivRow;
 }
 
+
+function viewHighScores() {
+    var scoreList = $('#score-list');
+    highscore = loadHighScores();
+    if ( highscore) {
+        var scoreUl = $('<ol>');
+
+        highscore.forEach(function (item) {
+            var scoreLi = $('<li>');
+            scoreLi.append(item.player + " - " + item.score);
+            scoreUl.append(scoreLi);
+        });
+        scoreList.append(scoreUl);
+    } else {
+        scoreList.html("<p>No high scores yet, play a game!</p>");
+    }
+}
 
 function playGame() {
     $('#main-text').html(loadedQuestions[currentQuestion].title);
@@ -113,7 +128,7 @@ function playGame() {
     var actualAnswer = loadedQuestions[currentQuestion].answer;
     $(loadedQuestions[currentQuestion].choices).each(function (index, item) {
         // Create a button for each answer.
-        answerList.append(createGameButton(item));
+        answerList.append(createButton(item, "gameButton"));
     });
 
     var answerButton = $('.gameButton');
@@ -159,23 +174,30 @@ function playGame() {
 }
 
 // Statements
-loadData();
-
-// Redirect button for highscores page.
-$('#btn-back').click(function () {
-    window.location.href = "index.html";
-});
-
-// Clear highscore button for highscores page
-$('#btn-clear-highscore').click(function () {
-   localStorage.removeItem(KEY_HIGHSCORE);
-});
-
-$('#btn-start').click(function () {
-    theCounter(DEFAULT_TIME);
-    loadHighScores();
-    playGame();
-});
 
 
+// So it doesn't wig out, only show these if on the highscore page.
+if ( window.location.href.indexOf("highscore") > -1) {
+    viewHighScores();
+    // Redirect button for highscores page.
+    $('#btn-back').click(function () {
+        window.location.href = "index.html";
+    });
 
+    // Clear highscore button for highscores page
+    $('#btn-clear-highscore').click(function () {
+        console.log("clearing");
+        localStorage.removeItem(KEY_HIGHSCORE);
+        $('#score-list').html("<p>No high scores yet, play a game!</p>")
+    });
+}
+
+// So it doesn't wig out, only show these if on the index page.
+if ( window.location.href.indexOf("index") > -1) {
+    loadData();
+    $('#btn-start').click(function () {
+        theCounter(DEFAULT_TIME);
+        loadHighScores();
+        playGame();
+    });
+}
