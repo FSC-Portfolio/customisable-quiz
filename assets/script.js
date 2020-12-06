@@ -174,7 +174,7 @@ function playGame() {
 }
 
 // Statements
-
+loadData();
 
 // So it doesn't wig out, only show these if on the highscore page.
 if ( window.location.href.indexOf("highscore") > -1) {
@@ -194,7 +194,6 @@ if ( window.location.href.indexOf("highscore") > -1) {
 
 // So it doesn't wig out, only show these if on the index page.
 if ( window.location.href.indexOf("index") > -1) {
-    loadData();
     $('#btn-start').click(function () {
         theCounter(DEFAULT_TIME);
         loadHighScores();
