@@ -195,6 +195,7 @@ if ( window.location.href.indexOf("highscore") > -1) {
 // So it doesn't wig out, only show these if on the index page.
 if ( window.location.href.indexOf("index") > -1) {
     $('#btn-start').click(function () {
+        console.log("starting");
         theCounter(DEFAULT_TIME);
         loadHighScores();
         playGame();
