@@ -1,15 +1,18 @@
 "use strict";
+// Constants
 var DEFAULT_TIME = 60;
 var PENALTY_TIME = 10
 var KEY_QANDA = "qanda"
 var KEY_HIGHSCORE = "highscore";
+
+// Variables
 var loadedQuestions;
 var currentQuestion = 0;
 var counter = 0;
 var timer;
 var highscore = [];
 
-
+// Functions
 function loadHighScores() {
     // Load high scores if they exist.
     if (localStorage.getItem(KEY_HIGHSCORE)) {
@@ -134,7 +137,7 @@ function playGame() {
                     storeHighScore(initials, counter);
                     // Stop the counter and redirect the user to the high score page (get their initials here first).
                     theCounterStop();
-                    // window.location.href = "highscore.html";
+                    window.location.href = "highscore.html";
                 }
             } else {
                 // Incorrect answer. Stop the current timer and start a new one minus 10 seconds.
@@ -155,11 +158,24 @@ function playGame() {
     })
 }
 
-
+// Statements
 loadData();
+
+// Redirect button for highscores page.
+$('#btn-back').click(function () {
+    window.location.href = "index.html";
+});
+
+// Clear highscore button for highscores page
+$('#btn-clear-highscore').click(function () {
+   localStorage.removeItem(KEY_HIGHSCORE);
+});
+
 $('#btn-start').click(function () {
     theCounter(DEFAULT_TIME);
     loadHighScores();
     playGame();
 });
+
+
 
