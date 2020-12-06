@@ -11,7 +11,12 @@ Can be viewed at the following link(s):
 If you'd like to load different questions, replace questions.js with your list (JSON formatted.)
 
 ## Setup
-paste n go
+click link n go
+
+## KNown bugs
+- when user clicks the wrong answer too many times the clock will stop, but the user can continue clicking the correct answers and win the game.
+- the highscores are not shown in order
+- the css needs some tweaking to match the design brief.
 
 ## Files and Directories
 
